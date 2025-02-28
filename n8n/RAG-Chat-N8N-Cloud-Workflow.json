@@ -1,0 +1,344 @@
+{
+  "name": "rag-query-db",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "execute-query",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Start Webhook",
+      "position": [
+        320,
+        -100
+      ],
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "webhookId": "query-executor",
+      "id": "4579b82c-72ef-4ad1-b63a-0c8cead7c5e8"
+    },
+    {
+      "parameters": {
+        "fileName": "={{ 'query_' + new Date().toISOString().replace(/[:.]/g, '-') + ($json.requestId ? '_' + $json.requestId.substring(0, 8) : '') + '.json' }}",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "name": "Save Results as JSON",
+      "position": [
+        1520,
+        100
+      ],
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "id": "340419d5-c15b-44d5-8145-725b89b59385"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1720,
+        -100
+      ],
+      "id": "c04de4bd-f0dd-4178-9d61-6d03bd94353c",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.body.query }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        720,
+        -100
+      ],
+      "id": "8ad18210-6520-470a-9b41-5912bde1360e",
+      "name": "Execute_SQL_Query",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mySql": {
+          "id": "PSZ4oX1SyoQ5jRK5",
+          "name": "MySQL account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "table": {
+          "__rl": true,
+          "value": "audit_logs",
+          "mode": "list",
+          "cachedResultName": "audit_logs"
+        },
+        "dataMode": "defineBelow",
+        "valuesToSend": {
+          "values": [
+            {
+              "column": "query_text",
+              "value": "={{ $node[\"Start Webhook\"].json.body.query }}"
+            },
+            {
+              "column": "user_input",
+              "value": "={{ $node[\"Start Webhook\"].json.body.userQuery || $node[\"Start Webhook\"].json.body.query }}"
+            },
+            {
+              "column": "execution_time",
+              "value": "={{ Date.now() - $node[\"Start Webhook\"].context.startTime || 0 }}"
+            },
+            {
+              "column": "row_count",
+              "value": "={{ $json.rowCount || 0 }}"
+            },
+            {
+              "column": "response_status",
+              "value": "={{ $json.response_status || \"success\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [
+        1120,
+        100
+      ],
+      "id": "4f6c5de3-da90-40b2-b154-882b0133cc02",
+      "name": "Log to Audit Table",
+      "credentials": {
+        "mySql": {
+          "id": "PSZ4oX1SyoQ5jRK5",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the error information\nconst error = $input.item.error || { message: 'Query execution failed' };\n\n// Format the error response\nreturn {\n  json: {\n    results: [],\n    rowCount: 0,\n    query: $node[\"Start Webhook\"].json.body.query,\n    response_status: \"error\",\n    error: error.message,\n    details: error.stack || '',\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        100
+      ],
+      "id": "b7519c61-0527-4952-95e2-165b200f3286",
+      "name": "Handle Error"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all rows from the SQL node\nconst allItems = $input.all();\n\n// Extract the raw data (each item.json is one row)\nconst results = allItems.map(item => item.json);\n\n// Optional: Format specific fields, like dates\nconst formattedResults = results.map(row => {\n  const formattedRow = { ...row };\n  if (formattedRow.created_at) {\n    formattedRow.created_at = new Date(formattedRow.created_at).toISOString();\n  }\n  return formattedRow;\n});\n\n// Return everything as a single JSON object\nreturn {\n  json: {\n    results: formattedResults,\n    rowCount: formattedResults.length,\n    query: $node[\"Start Webhook\"].json.body.query, // Add this\n    response_status: \"success\", // Add this\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        -100
+      ],
+      "id": "be47b2ba-5d26-415e-89f5-e0d838247238",
+      "name": "Format SQL Results"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all data from previous nodes\nconst inputData = $input.item.json;\n\n// Build the response object\nconst response = {\n  results: inputData.results,\n  metadata: {\n    rowCount: inputData.rowCount,\n    executionTime: inputData.executionTime,\n    timestamp: inputData.timestamp,\n    query: inputData.query,\n  },\n  // We'd include this in stage 2 of RAG process\n  naturalLanguageResponse: inputData.naturalLanguageResponse || null,\n  jsonFilename: `query_${new Date().toISOString().replace(/[:.]/g, '-')}${inputData.requestId ? '_' + inputData.requestId.substring(0, 8) : ''}.json`\n};\n\nreturn { json: response };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        -100
+      ],
+      "id": "fd4eef2c-b137-48f3-b8f7-4d739108cc7e",
+      "name": "Prepare Responses"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Capture the start time and pass along the incoming data\nreturn {\n  json: {\n    ...$input.item.json, // Preserve the incoming query data\n    startTime: Date.now() // Milliseconds since epoch\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        -100
+      ],
+      "id": "fe5e1bdb-a5ee-4611-baab-979dc9fa509b",
+      "name": "Set Start Time"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        100
+      ],
+      "id": "faa43e1d-0696-4789-9459-13fdf1989ab5",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "content": "POST Query",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        300,
+        60
+      ],
+      "id": "1d9c5506-e890-46b0-bad4-bac51c09049a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Log for Execution Time",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        500,
+        60
+      ],
+      "id": "278118b2-2085-4987-b0e3-7c9eab707c37",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Start Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set Start Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Results as JSON": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute_SQL_Query": {
+      "main": [
+        [
+          {
+            "node": "Format SQL Results",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log to Audit Table": {
+      "main": [
+        []
+      ]
+    },
+    "Handle Error": {
+      "main": [
+        [
+          {
+            "node": "Log to Audit Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format SQL Results": {
+      "main": [
+        [
+          {
+            "node": "Prepare Responses",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log to Audit Table",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Responses": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Start Time": {
+      "main": [
+        [
+          {
+            "node": "Execute_SQL_Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Save Results as JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "06d78ab9-7197-4d38-9f95-c81fafff302e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b5b7ccff831bb79c622d4794a561af6c05dd87ebac9ea8df666ea9ef9701477f"
+  },
+  "id": "C67WM6n9AiGG5UOp",
+  "tags": []
+}
