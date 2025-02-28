@@ -4,6 +4,8 @@ A reference implementation of a Retrieval-Augmented Generation (RAG) powered cha
 
 ## System Architecture
 
+![My Image](./RAG_CHAT_BLOCK_DIAGRAM.png)
+
 The application consists of three main components:
 
 1. **React Frontend**: A chat interface for interacting with the database
@@ -32,24 +34,15 @@ The application consists of three main components:
 
 1. Create a MySQL database (local or cloud-hosted)
 2. Create required tables using the script in `db/schema.sql`
-3. Update your `.env` file with the database connection details
+3. Update your `.env` file with the database connection details 
 
 ### 2. n8n Setup
 
-1. Install n8n globally:
-   ```bash
-   npm install n8n -g
-   ```
-
-2. Start n8n:
-   ```bash
-   n8n start
-   ```
-
-3. Access the n8n web interface at http://localhost:5678/
-4. Import the workflow file from `n8n/database-query-executor.json`
-5. Configure the MySQL credentials to connect to your database
-6. Activate the workflow
+1. Sign up and log in to n8n Cloud at https://cloud.n8n.io.
+2. Navigate to your n8n Cloud workspace.
+3. Import the workflow file from n8n/database-query-executor.json.
+4. Configure the MySQL credentials to connect to your database.
+5. Activate the workflow.
 
 ### 3. Backend Setup
 
@@ -203,11 +196,3 @@ Response:
   }
 }
 ```
-
-## License
-
-ISC License
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
