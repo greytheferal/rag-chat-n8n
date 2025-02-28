@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Tools Diagnostics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        h1 {
+            color: #2196f3;
+            text-align: center;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .status-item {
+            margin-bottom: 12px;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ccc;
+        }
+        .status-ok {
+            background-color: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+        .status-error {
+            background-color: #ffebee;
+            border-left-color: #f44336;
+        }
+        .status-unknown {
+            background-color: #f5f5f5;
+            border-left-color: #9e9e9e;
+        }
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .status-name {
+            font-weight: bold;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .badge-ok {
+            background-color: #4caf50;
+            color: white;
+        }
+        .badge-error {
+            background-color: #f44336;
+            color: white;
+        }
+        .badge-unknown {
+            background-color: #9e9e9e;
+            color: white;
+        }
+        .message {
+            font-size: 14px;
+            color: #333;
+        }
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #2196f3;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #1976d2;
+        }
+        .links {
+            margin-top: 20px;
+        }
+        .links a {
+            display: block;
+            margin-bottom: 10px;
+            color: #2196f3;
+            text-decoration: none;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>MCP Tools System Diagnostics</h1>
+    
+    <div class="card">
+        <h2>System Status</h2>
+        <div id="status-container">
+            <div class="status-item status-unknown">
+                <div class="status-header">
+                    <div class="status-name">Server</div>
+                    <div class="status-badge badge-unknown">Unknown</div>
+                </div>
+                <div class="message">Running diagnostics...</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button id="refresh-btn">Refresh Status</button>
+            <button id="detailed-btn">Show Details</button>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>Connection Information</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td><strong>Server URL:</strong></td>
+                <td id="server-url"></td>
+            </tr>
+            <tr>
+                <td><strong>n8n Status:</strong></td>
+                <td id="n8n-status">Checking...</td>
+            </tr>
+            <tr>
+                <td><strong>Database:</strong></td>
+                <td id="db-status">Checking...</td>
+            </tr>
+            <tr>
+                <td><strong>OpenAI:</strong></td>
+                <td id="openai-status">Checking...</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="card">
+        <h2>Test Interfaces</h2>
+        <div class="links">
+            <a href="/chat.html">Simplified Chat Interface</a>
+            <a href="/index.html">Original Chat Interface</a>
+            <a href="/health" target="_blank">Health Check API</a>
+            <a href="/diagnostics" target="_blank">Detailed Diagnostics API</a>
+        </div>
+    </div>
+    
+    <script>
+        // DOM elements
+        const statusContainer = document.getElementById('status-container');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const detailedBtn = document.getElementById('detailed-btn');
+        const serverUrlEl = document.getElementById('server-url');
+        const n8nStatusEl = document.getElementById('n8n-status');
+        const dbStatusEl = document.getElementById('db-status');
+        const openaiStatusEl = document.getElementById('openai-status');
+        
+        // Set server URL
+        serverUrlEl.textContent = window.location.origin;
+        
+        // Create status item element
+        function createStatusItem(name, status, message) {
+            const item = document.createElement('div');
+            item.className = `status-item status-${status}`;
+            
+            const header = document.createElement('div');
+            header.className = 'status-header';
+            
+            const nameEl = document.createElement('div');
+            nameEl.className = 'status-name';
+            nameEl.textContent = name;
+            
+            const badgeEl = document.createElement('div');
+            badgeEl.className = `status-badge badge-${status}`;
+            badgeEl.textContent = status.toUpperCase();
+            
+            header.appendChild(nameEl);
+            header.appendChild(badgeEl);
+            
+            const messageEl = document.createElement('div');
+            messageEl.className = 'message';
+            messageEl.textContent = message;
+            
+            item.appendChild(header);
+            item.appendChild(messageEl);
+            
+            return item;
+        }
+        
+        // Check service status
+        async function checkServices() {
+            // Clear container
+            statusContainer.innerHTML = '';
+            
+            try {
+                // Check server
+                const serverItem = createStatusItem('Server', 'unknown', 'Checking server status...');
+                statusContainer.appendChild(serverItem);
+                
+                // Get diagnostics
+                const response = await fetch('/diagnostics');
+                
+                if (!response.ok) {
+                    serverItem.className = 'status-item status-error';
+                    serverItem.querySelector('.status-badge').className = 'status-badge badge-error';
+                    serverItem.querySelector('.status-badge').textContent = 'ERROR';
+                    serverItem.querySelector('.message').textContent = `Server returned status ${response.status}`;
+                    return;
+                }
+                
+                // Update server status
+                serverItem.className = 'status-item status-ok';
+                serverItem.querySelector('.status-badge').className = 'status-badge badge-ok';
+                serverItem.querySelector('.status-badge').textContent = 'OK';
+                serverItem.querySelector('.message').textContent = 'Server is running';
+                
+                // Parse response
+                const data = await response.json();
+                const services = data.services;
+                
+                // Update connection info
+                n8nStatusEl.textContent = services.n8n.status === 'ok' ? 'Connected' : 'Error: ' + services.n8n.message;
+                dbStatusEl.textContent = services.database.status === 'ok' ? 'Connected' : 'Error: ' + services.database.message;
+                openaiStatusEl.textContent = services.openai.status === 'ok' ? 'Initialized' : 'Error: ' + services.openai.message;
+                
+                // Add service statuses
+                for (const [name, info] of Object.entries(services)) {
+                    if (name === 'server') continue; // Already handled
+                    
+                    const item = createStatusItem(
+                        name.charAt(0).toUpperCase() + name.slice(1),
+                        info.status,
+                        info.message
+                    );
+                    statusContainer.appendChild(item);
+                }
+                
+            } catch (error) {
+                // Create error item
+                const errorItem = createStatusItem('Connection', 'error', `Failed to connect to server: ${error.message}`);
+                statusContainer.appendChild(errorItem);
+                
+                // Update connection info
+                n8nStatusEl.textContent = 'Cannot check - server connection failed';
+                dbStatusEl.textContent = 'Cannot check - server connection failed';
+                openaiStatusEl.textContent = 'Cannot check - server connection failed';
+            }
+        }
+        
+        // Show detailed diagnostics
+        function showDetails() {
+            window.open('/diagnostics', '_blank');
+        }
+        
+        // Event listeners
+        refreshBtn.addEventListener('click', checkServices);
+        detailedBtn.addEventListener('click', showDetails);
+        
+        // Initial check
+        checkServices();
+    </script>
+</body>
+</html>

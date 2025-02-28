@@ -1,0 +1,233 @@
+{
+  "timestamp": "2025-02-28T09:59:00.882Z",
+  "query": "SELECT * FROM users LIMIT 100;",
+  "results": [
+    {
+      "user_id": 1,
+      "full_name": "John Doe",
+      "email": "john.doe@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-15 14:30:22"
+    },
+    {
+      "user_id": 2,
+      "full_name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-18 09:15:47"
+    },
+    {
+      "user_id": 3,
+      "full_name": "Michael Johnson",
+      "email": "michael.j@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 0,
+      "last_login": "2023-09-30 11:20:15"
+    },
+    {
+      "user_id": 4,
+      "full_name": "Emily Brown",
+      "email": "emily.brown@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-19 16:45:33"
+    },
+    {
+      "user_id": 5,
+      "full_name": "David Wilson",
+      "email": "david.wilson@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-17 13:10:59"
+    },
+    {
+      "user_id": 6,
+      "full_name": "Sarah Garcia",
+      "email": "sarah.g@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-16 10:22:45"
+    },
+    {
+      "user_id": 7,
+      "full_name": "Robert Martinez",
+      "email": "robert.m@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 0,
+      "last_login": "2023-08-25 08:17:32"
+    },
+    {
+      "user_id": 8,
+      "full_name": "Lisa Anderson",
+      "email": "lisa.a@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-19 14:55:21"
+    },
+    {
+      "user_id": 9,
+      "full_name": "James Taylor",
+      "email": "james.t@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-18 11:33:07"
+    },
+    {
+      "user_id": 10,
+      "full_name": "Jennifer Thomas",
+      "email": "jennifer.t@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-17 15:42:18"
+    },
+    {
+      "user_id": 11,
+      "full_name": "Daniel Clark",
+      "email": "daniel.c@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 0,
+      "last_login": "2023-07-12 09:28:45"
+    },
+    {
+      "user_id": 12,
+      "full_name": "Maria Rodriguez",
+      "email": "maria.r@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-19 12:15:30"
+    },
+    {
+      "user_id": 13,
+      "full_name": "Kevin Lewis",
+      "email": "kevin.l@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-18 16:40:22"
+    },
+    {
+      "user_id": 14,
+      "full_name": "Patricia Walker",
+      "email": "patricia.w@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-16 14:27:39"
+    },
+    {
+      "user_id": 15,
+      "full_name": "George Hall",
+      "email": "george.h@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 0,
+      "last_login": "2023-09-05 11:10:15"
+    },
+    {
+      "user_id": 16,
+      "full_name": "Elizabeth Young",
+      "email": "elizabeth.y@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-19 10:05:12"
+    },
+    {
+      "user_id": 17,
+      "full_name": "Richard Scott",
+      "email": "richard.s@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-17 13:50:28"
+    },
+    {
+      "user_id": 18,
+      "full_name": "Susan Adams",
+      "email": "susan.a@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-18 09:30:45"
+    },
+    {
+      "user_id": 19,
+      "full_name": "Thomas Baker",
+      "email": "thomas.b@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 0,
+      "last_login": "2023-05-20 10:15:33"
+    },
+    {
+      "user_id": 20,
+      "full_name": "Nancy Carter",
+      "email": "nancy.c@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-19 14:22:17"
+    },
+    {
+      "user_id": 21,
+      "full_name": "Charles Evans",
+      "email": "charles.e@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-16 11:33:42"
+    },
+    {
+      "user_id": 22,
+      "full_name": "Karen Foster",
+      "email": "karen.f@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-18 15:48:29"
+    },
+    {
+      "user_id": 23,
+      "full_name": "Joseph Gray",
+      "email": "joseph.g@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 0,
+      "last_login": "2023-08-10 09:27:16"
+    },
+    {
+      "user_id": 24,
+      "full_name": "Donna Hill",
+      "email": "donna.h@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-19 13:10:55"
+    },
+    {
+      "user_id": 25,
+      "full_name": "Christopher Irwin",
+      "email": "chris.i@example.com",
+      "created_at": "2025-02-27 17:42:41",
+      "updated_at": "2025-02-27 17:42:41",
+      "is_active": 1,
+      "last_login": "2023-10-17 10:45:38"
+    }
+  ],
+  "userQuery": "There are 25 users in the database. Here are a few examples:\n\n1. User ID 1: John Doe, who is active and last logged in on October 15, 2023. You can reach him at john.doe@example.com.\n2. User ID 2: Jane Smith, an active user who last logged into the system on October 18, 2023. Her email is jane.smith@example.com.\n3. User ID 3: Michael Johnson, who is currently inactive. His last login was on September 30, 2023. His email is michael.j@example.com.\n4. User ID 4: Emily Brown, an active user who last accessed the system on October 19, 2023. You can contact her at emily.brown@example.com.\n5. User ID 5: David Wilson, an active user who last logged in on October 17, 2023. His email is david.wilson@example.com.\n\nIf you need information on more users, please let me know!",
+  "naturalLanguageResponse": ""
+}

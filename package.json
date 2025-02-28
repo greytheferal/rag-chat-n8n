@@ -1,0 +1,51 @@
+{
+  "author": "",
+  "dependencies": {
+    "axios": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "mysql2": "^3.12.0",
+    "openai": "^4.85.4",
+    "uuid": "^9.0.1",
+    "winston": "^3.17.0"
+  },
+  "description": "RAG-powered chat interface for database querying",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/helmet": "^0.0.48",
+    "@types/node": "^22.13.5",
+    "@types/uuid": "^9.0.7",
+    "nodemon": "^3.1.9",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3"
+  },
+  "keywords": [
+    "rag",
+    "database",
+    "chat",
+    "n8n",
+    "openai"
+  ],
+  "license": "ISC",
+  "main": "dist/app.js",
+  "name": "mihai-nodejs-rag",
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "db:refresh": "ts-node src/utils/db-test.ts",
+    "db:setup": "ts-node src/utils/create-tables.ts",
+    "db:local": "ts-node src/utils/setup-local-db.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "lint": "eslint . --ext .ts",
+    "n8n:test": "ts-node src/utils/n8n-test.ts",
+    "api:test": "ts-node src/utils/api-test.ts",
+    "start": "node dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "commonjs",
+  "version": "1.0.0"
+}
