@@ -126,7 +126,7 @@ For a more advanced React-based frontend, follow these steps:
 | DB_NAME | Database name | rag_test_db |
 | DB_PORT | Database port | 3306 |
 | DB_SSL | Use SSL for database connection | true |
-| N8N_WEBHOOK_URL | n8n webhook URL | http://localhost:5678/webhook/execute-query |
+| N8N_WEBHOOK_URL | n8n webhook URL |  |
 | OPENAI_API_KEY | OpenAI API key | |
 | OPENAI_MODEL | OpenAI model to use | gpt-4 |
 | LOG_LEVEL | Logging level | info |
